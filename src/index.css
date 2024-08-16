@@ -1,3 +1,17 @@
+/** @format */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+	margin: 0;
+}
+.navbar-scrolled {
+	backdrop-filter: blur(13px) saturate(200%);
+	-webkit-backdrop-filter: blur(13px) saturate(200%);
+	background-color: rgba(255, 255, 255, 0.46);
+	border-radius: 12px;
+	border: 1px solid rgba(209, 213, 219, 0.3);
+	background-color: lightseagreen;
+}
