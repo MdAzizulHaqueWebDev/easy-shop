@@ -11,6 +11,9 @@ const Home = () => {
 	const [products, setProducts] = useState([]);
 	const [search, setSearch] = useState("");
 	const [sort, setSort] = useState("");
+	const [brand, setBrand] = useState("");
+	const [priceRange, setPriceRange] = useState("");
+	const [category, setCategory] = useState("");
 
 	// shortcut for query
 	// const [queryParams, setQueryParams] = useState({
@@ -42,14 +45,39 @@ const Home = () => {
 			return toast.error("Please, Write anything ");
 		setSearch(searchValue);
 	};
+
+	const handleFiltering = () => {
+		const selectedBrandOption = document.querySelector(
+			'input[name="brand"]:checked',
+		);
+		const selectedCategoryOption = document.querySelector(
+			'input[name="category"]:checked',
+		);
+		const selectedPriceRangeOption = document.querySelector(
+			'input[name="priceRange"]:checked',
+		);
+		if (selectedBrandOption) {
+			setBrand(selectedBrandOption.value);
+		}
+		if (selectedCategoryOption) {
+			setCategory(selectedCategoryOption.value);
+		}
+		if (selectedPriceRangeOption) {
+			setPriceRange(selectedPriceRangeOption.value);
+		}
+	};
+	console.log({ brand, category, priceRange });
+
 	const fetchProductsData = async () => {
-		const { data } = await axios.get(`/products?search=${search}&sort=${sort}`);
+		const { data } = await axios.get(
+			`/products?search=${search}&sort=${sort}&category=${category}&brand=${brand}&pricerange=${priceRange}`,
+		);
 		setProducts(data);
 	};
 
 	useEffect(() => {
 		fetchProductsData();
-	}, [search, sort]);
+	}, [search, sort, category]);
 
 	if (!products.length) return <h1 className="text-9xl">Loading</h1>;
 	return (
@@ -77,20 +105,20 @@ const Home = () => {
 					name="pricingType"
 					className="h-10 max-w-fit border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
 				>
-					<option value="sorting" selected disabled hidden>
+					<option defaultValue="sorting" selected disabled hidden>
 						Sorting
 					</option>
-					<option value="default">Default</option>
+					<option defaultValue="default">Default</option>
 					<option disabled>Price</option>
-					<option className="ml-10" value="lowToHigh">
+					<option className="ml-10" defaultValue="lowToHigh">
 						Low To High
 					</option>
-					<option value="highToLow" className="ml-3">
+					<option defaultValue="highToLow" className="ml-3">
 						High To Low
 					</option>
 					<option disabled>Date Added</option>
-					<option value="newest">Newest</option>
-					<option value="oldest">Oldest</option>
+					<option defaultValue="newest">Newest</option>
+					<option defaultValue="oldest">Oldest</option>
 				</select>
 			</div>
 			<div className="grid grid-cols-8 my-3">
@@ -100,7 +128,47 @@ const Home = () => {
 					))}
 				</section>
 				<section className="col-span-2 w-full border rounded-xl p-5">
-					filtering
+					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
+						<h4 className="text-xl font-semibold">Brand Name</h4>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="apple" />
+							<i className="pl-2">Apple</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="germany" />
+							<i className="pl-2">Germany</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="olive" />
+							<i className="pl-2">Olive</i>
+						</label>
+					</div>
+					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
+						<h4 className="text-xl font-semibold">Category</h4>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="category" defaultValue="electronics" />
+							<i className="pl-2">Electronics</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="category" defaultValue="personal" />
+							<i className="pl-2">Personal</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="category" defaultValue="kitchen" />
+							<i className="pl-2">House Kitchen</i>
+						</label>
+					</div>
+					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
+						<h4 className="text-xl font-semibold">Price Range</h4>
+
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="priceRange" defaultValue="1to20" />
+							<i className="pl-2">1$ to 20</i>
+						</label>
+					</div>
+					<button className="btn" onClick={handleFiltering}>
+						Apply
+					</button>
 				</section>
 			</div>
 		</>
