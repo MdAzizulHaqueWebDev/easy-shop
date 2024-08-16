@@ -66,7 +66,7 @@ const Home = () => {
 			setPriceRange(selectedPriceRangeOption.value);
 		}
 	};
-	console.log({ brand, category, priceRange });
+	console.log({ sort});
 
 	const fetchProductsData = async () => {
 		const { data } = await axios.get(
@@ -77,9 +77,9 @@ const Home = () => {
 
 	useEffect(() => {
 		fetchProductsData();
-	}, [search, sort, category]);
+	}, [search, sort, category, brand]);
 
-	if (!products.length) return <h1 className="text-9xl">Loading</h1>;
+	if (!products.length && !search) return <h1 className="text-9xl">Loading</h1>;
 	return (
 		<>
 			<div className="flex flex-col md:flex-row gap-3 max-w-5xl mx-auto">
@@ -101,24 +101,22 @@ const Home = () => {
 					onChange={(e) => {
 						setSort(e.target.value);
 					}}
-					id="pricingType"
-					name="pricingType"
 					className="h-10 max-w-fit border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
 				>
 					<option defaultValue="sorting" selected disabled hidden>
 						Sorting
 					</option>
-					<option defaultValue="default">Default</option>
+					<option value="default">Default</option>
 					<option disabled>Price</option>
-					<option className="ml-10" defaultValue="lowToHigh">
+					<option className="ml-10" value="lowToHigh">
 						Low To High
 					</option>
-					<option defaultValue="highToLow" className="ml-3">
+					<option value="highToLow" className="ml-3">
 						High To Low
 					</option>
 					<option disabled>Date Added</option>
-					<option defaultValue="newest">Newest</option>
-					<option defaultValue="oldest">Oldest</option>
+					<option value="newest">Newest</option>
+					<option value="oldest">Oldest</option>
 				</select>
 			</div>
 			<div className="grid grid-cols-8 my-3">
@@ -131,16 +129,36 @@ const Home = () => {
 					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
 						<h4 className="text-xl font-semibold">Brand Name</h4>
 						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
-							<input type="radio" name="brand" defaultValue="apple" />
-							<i className="pl-2">Apple</i>
+							<input type="radio" name="brand" defaultValue="Fuji" />
+							<i className="pl-2">Fuji</i>
 						</label>
 						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
-							<input type="radio" name="brand" defaultValue="germany" />
-							<i className="pl-2">Germany</i>
+							<input type="radio" name="brand" defaultValue="Organic Brown" />
+							<i className="pl-2">Organic Brown</i>
 						</label>
 						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
-							<input type="radio" name="brand" defaultValue="olive" />
-							<i className="pl-2">Olive</i>
+							<input type="radio" name="brand" defaultValue="XYZ" />
+							<i className="pl-2">XYZ</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="Gaming" />
+							<i className="pl-2">Gaming</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="tel" />
+							<i className="pl-2">tel</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="RFL" />
+							<i className="pl-2">RFL</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="RDX" />
+							<i className="pl-2">RDX</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="chaldhal" />
+							<i className="pl-2">chaldhal</i>
 						</label>
 					</div>
 					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
@@ -166,7 +184,10 @@ const Home = () => {
 							<i className="pl-2">1$ to 20</i>
 						</label>
 					</div>
-					<button className="btn" onClick={handleFiltering}>
+					<button
+						className="btn btn-ghost btn-success border outline-dashed mx-auto mt-4"
+						onClick={handleFiltering}
+					>
 						Apply
 					</button>
 				</section>
