@@ -3,8 +3,8 @@
 import React from "react";
 
 const ProductCard = ({ product }) => {
-	// console.log(product);
-	const { productName, productImage, price } = product;
+	console.log(product);
+	const { productName, productImage, price, creationDate } = product;
 	return (
 		<>
 			<div class="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">

@@ -8,50 +8,50 @@ import toast from "react-hot-toast";
 
 const Home = () => {
 	const axios = useAxios();
-	const [queryParams, setQueryParams] = useState({});
+	const [products, setProducts] = useState([]);
+	const [search, setSearch] = useState("");
+	const [sort, setSort] = useState("");
+
+	// shortcut for query
+	// const [queryParams, setQueryParams] = useState({
+	// 	q: 'shoes',
+	// 	category: 'men',
+	// 	sort: 'price_asc',
+	// 	page: 1,
+	// 	limit: 10
+	//   });
+	// tanstack query
+	// const {
+	// 	data: products,
+	// 	isPending,
+	// 	refetch,
+	// } = useQuery({
+	// 	queryKey: ["products-collection"],
+	// 	queryFn: async () => {
+	// 		const { data } = await axios.get(
+	// 			`/products?search=${search}&sort=${sort}`,
+	// 		);
+	// 		return data;
+	// 	},
+	// });
 
 	const searchSubmit = (e) => {
 		e.preventDefault();
 		const searchValue = e.target.search.value;
 		if (!searchValue.length || searchValue == " ")
 			return toast.error("Please, Write anything ");
-		setQueryParams({ ...queryParams, search: searchValue });
+		setSearch(searchValue);
+	};
+	const fetchProductsData = async () => {
+		const { data } = await axios.get(`/products?search=${search}&sort=${sort}`);
+		setProducts(data);
 	};
 
-	console.log(queryParams);
-	// handle sorting
-	const handleSorting = (e) => {
-		const selectedValue = e.target.value;
-		if (selectedValue === "lowToHigh" || selectedValue === "highToLow") {
-			// Price-based sorting
-			setQueryParams({ ...queryParams, sort: selectedValue });
-		} else if (selectedValue === "newest" || selectedValue === "oldest") {
-			// Date-based sorting
-			console.log("Date sorting selected:", selectedValue);
-			setQueryParams({ ...queryParams, sort: selectedValue });
-		} else if (selectedValue === "all") {
-			// Handle "All" option
-			setQueryParams({ ...queryParams, sort: "all" });
-		}
-	};
-	const {
-		data: products,
-		isPending,
-		refetch,
-	} = useQuery({
-		queryKey: ["products-collection"],
-		queryFn: async () => {
-			const { data } = await axios.get(
-				`/products?search=${queryParams?.search}&sort=${queryParams?.sort}`,
-			);
-			return data;
-		},
-	});
 	useEffect(() => {
-		refetch();
-	}, [queryParams]);
-	if (isPending || !products.length)
-		return <h1 className="text-9xl">Loading</h1>;
+		fetchProductsData();
+	}, [search, sort]);
+
+	if (!products.length) return <h1 className="text-9xl">Loading</h1>;
 	return (
 		<>
 			<div className="flex flex-col md:flex-row gap-3 max-w-5xl mx-auto">
@@ -70,7 +70,9 @@ const Home = () => {
 					</button>
 				</form>
 				<select
-					onChange={handleSorting}
+					onChange={(e) => {
+						setSort(e.target.value);
+					}}
 					id="pricingType"
 					name="pricingType"
 					className="h-10 max-w-fit border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
@@ -78,7 +80,7 @@ const Home = () => {
 					<option value="sorting" selected disabled hidden>
 						Sorting
 					</option>
-					<option value="all">All</option>
+					<option value="default">Default</option>
 					<option disabled>Price</option>
 					<option className="ml-10" value="lowToHigh">
 						Low To High
