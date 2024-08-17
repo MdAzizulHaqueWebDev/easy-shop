@@ -5,8 +5,9 @@ import Login from "./Login";
 import useAuth from "../hooks/useAuth";
 import { useState } from "react";
 const Navbar = () => {
-	const { user } = useAuth();
+	const { user, logOut } = useAuth();
 	const [showMenu, setShowMenu] = useState(false);
+	const [showLogOutBtn, setShowLogoutBtn] = useState(false);
 	const navLinks = (
 		<>
 			<li className="p-2 border-e-0 hover:border-rose-500 lg:hover:text-rose-400 transition-all duration-300">
@@ -108,10 +109,33 @@ const Navbar = () => {
 				</nav>
 				<div>
 					{user ? (
-						<div className="avatar placeholder">
+						<div
+							className="avatar placeholder"
+							onClick={() => setShowLogoutBtn(!showLogOutBtn)}
+						>
 							<div className="bg-neutral text-neutral-content w-12 rounded-full hover:border-rose-500 border-2 cursor-pointer">
-								<span>SY</span>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									className="h-12 w-12 p-5 text-black bg-gray-500 stroke-current"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+									></path>
+								</svg>
 							</div>
+							<button
+								className={`btn btn-sm absolute btn-warning ${
+									showLogOutBtn ? "block" : "hidden"
+								} top-10 right-1`}
+								onClick={() => logOut()}
+							>
+								Logout
+							</button>
 						</div>
 					) : (
 						<button

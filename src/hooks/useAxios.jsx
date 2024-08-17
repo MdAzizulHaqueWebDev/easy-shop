@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const commonInstance = axios.create({
-	baseURL: "http://localhost:3000",
+	baseURL: "https://easy-shop-server-side.vercel.app",
 });
 const useAxios = () => {
 	return commonInstance;

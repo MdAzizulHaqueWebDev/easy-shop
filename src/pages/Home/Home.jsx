@@ -1,6 +1,5 @@
 /** @format */
 
-import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../hooks/useAxios";
 import ProductCard from "../../components/ProductCard";
 import { useEffect, useState } from "react";
@@ -14,7 +13,11 @@ const Home = () => {
 	const [brand, setBrand] = useState("");
 	const [priceRange, setPriceRange] = useState("");
 	const [category, setCategory] = useState("");
-	const [showFiltering, setShowFiltering] = useState(false);
+	const [showFiltering, setShowFiltering] = useState(true);
+	const [productQuantity, setProductQuantity] = useState(null);
+	const [size, setSize] = useState(10);
+	const [currentPage, setCurrentPage] = useState(1);
+
 	// shortcut for query
 	// const [queryParams, setQueryParams] = useState({
 	// 	q: 'shoes',
@@ -66,18 +69,24 @@ const Home = () => {
 			setPriceRange(selectedPriceRangeOption.value);
 		}
 	};
-	console.log({ sort });
-
 	const fetchProductsData = async () => {
 		const { data } = await axios.get(
-			`/products?search=${search}&sort=${sort}&category=${category}&brand=${brand}&pricerange=${priceRange}`,
+			`/products?search=${search}&sort=${sort}&category=${category}&brand=${brand}&pricerange=${priceRange}&size=${size}&currentPage=${currentPage}`,
 		);
 		setProducts(data);
 	};
+	const fetchProductsQuantityNumber = async () => {
+		const { data } = await axios.get("/products-quantity");
+		setProductQuantity(data.quantity);
+	};
+	// pagination
+	const pageNum = Math.ceil(productQuantity / size);
+	const pages = [...Array(pageNum)].map((p, indx) => indx + 1);
 
 	useEffect(() => {
 		fetchProductsData();
-	}, [search, sort, category, brand, priceRange]);
+		fetchProductsQuantityNumber();
+	}, [search, sort, category, brand, priceRange, currentPage]);
 
 	// if (!products.length && !search) return <h1 className="text-9xl">Loading</h1>;
 	return (
@@ -150,9 +159,36 @@ const Home = () => {
 							className="col-span-full h-fit p-5"
 						/>
 					)}
+					<div className="col-span-full flex overflow-x-auto">
+						<button
+							onClick={() => setCurrentPage(currentPage - 1)}
+							className={`btn btn-outline btn-sm mr-2 ${
+								currentPage > 1 ? "block" : "hidden"
+							}`}
+						>
+							Previous
+						</button>
+						{pages.map((page) => (
+							<button
+								onClick={() => setCurrentPage(page)}
+								className="btn btn-outline btn-sm mr-2"
+								key={page}
+							>
+								{page}
+							</button>
+						))}
+						<button
+							onClick={() => setCurrentPage(currentPage + 1)}
+							className={`btn btn-outline btn-sm mr-2 ${
+								currentPage < pages.length - 1 ? "block" : "hidden"
+							}`}
+						>
+							Next
+						</button>
+					</div>
 				</section>
 				<section
-					className={`border max-h-[140vh] rounded-xl p-5 ${
+					className={`border max-h-[150vh] rounded-xl p-5 ${
 						showFiltering
 							? "hidden"
 							: "block absolute lg:static right-4 bg-red-400"

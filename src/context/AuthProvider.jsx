@@ -6,6 +6,7 @@ import {
 	onAuthStateChanged,
 	signInWithEmailAndPassword,
 	signInWithPopup,
+	signOut,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import auth from "../Auth/firebase.config";
@@ -23,6 +24,9 @@ const AuthProvider = ({ children }) => {
 	//login with email pas
 	const loginWithEmailPass = (email, password) =>
 		signInWithEmailAndPassword(auth, email, password);
+	// logout
+	const logOut = () => signOut(auth);
+
 	useEffect(() => {
 		const authStateChangedSpy = onAuthStateChanged(auth, (user) => {
 			setUser(user);
@@ -37,12 +41,14 @@ const AuthProvider = ({ children }) => {
 		createUser,
 		loginWithGoogle,
 		loginWithEmailPass,
+		logOut,
 	};
-	console.log(user);
 	return (
 		<AuthContext.Provider value={authInfo}>
 			{loading ? (
-				<span className="loading loading-spinner loading-lg"></span>
+				<div className="min-h-screen w-full flex justify-center items-center">
+					<p className="loading loading-spinner loading-lg"></p>
+				</div>
 			) : (
 				children
 			)}
