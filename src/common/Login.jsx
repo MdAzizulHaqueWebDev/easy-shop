@@ -7,33 +7,34 @@ import { useState } from "react";
 
 const Login = () => {
 	const navigate = useNavigate();
-	const [loading,setLoading] = useState(false)
+	const [loading, setLoading] = useState(false);
 	const { loginWithGoogle, loginWithEmailPass } = useAuth();
 	const handleGoogleLogin = () => {
 		loginWithGoogle()
 			.then((res) => {
-				console.log(res.user, "google login");
 				if (res.user) {
 					toast.success("Login Success");
 				}
 			})
-			.cacth((err) => console.log(err));
+			.catch((err) => toast.error(err.message));
 	};
 
 	// handle login with email pass
 	const handleFormSubmit = (e) => {
 		e.preventDefault();
-		setLoading(true)
+		setLoading(true);
 		const form = e.target;
 		const email = form.email.value;
 		const password = form.password.value;
 		loginWithEmailPass(email, password)
 			.then((res) => {
-				setLoading(false)
-				console.log(res)})
-				.catch((err) => {
-					setLoading(false)
-				console.log(err)});
+				toast.success("Login Success");
+				document.querySelector("#login-modal").close();
+			})
+			.catch((err) => {
+				setLoading(false);
+				toast.error(err.message);
+			});
 	};
 
 	return (
