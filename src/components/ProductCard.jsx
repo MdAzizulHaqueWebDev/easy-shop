@@ -3,7 +3,7 @@
 import React from "react";
 
 const ProductCard = ({ product }) => {
-	const { productName, productImage, price, creationDate } = product;
+	const { productName, productImage, price, creationDate, brand } = product;
 	return (
 		<>
 			<div class="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
@@ -14,7 +14,9 @@ const ProductCard = ({ product }) => {
 						class="h-80 w-72 object-cover rounded-t-xl"
 					/>
 					<div class="px-4 py-3 w-72">
-						<span class="text-gray-400 mr-3 uppercase text-xs">Brand</span>
+						<span class="text-gray-400 mr-3 uppercase text-xs">
+							Brand: {brand}
+						</span>
 						<p class="text-lg font-bold text-black truncate block capitalize">
 							{productName}
 						</p>

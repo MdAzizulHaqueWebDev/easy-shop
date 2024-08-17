@@ -66,7 +66,7 @@ const Home = () => {
 			setPriceRange(selectedPriceRangeOption.value);
 		}
 	};
-	console.log({ sort});
+	console.log({ sort });
 
 	const fetchProductsData = async () => {
 		const { data } = await axios.get(
@@ -79,7 +79,7 @@ const Home = () => {
 		fetchProductsData();
 	}, [search, sort, category, brand]);
 
-	if (!products.length && !search) return <h1 className="text-9xl">Loading</h1>;
+	// if (!products.length && !search) return <h1 className="text-9xl">Loading</h1>;
 	return (
 		<>
 			<div className="flex flex-col md:flex-row gap-3 max-w-5xl mx-auto">
@@ -121,9 +121,17 @@ const Home = () => {
 			</div>
 			<div className="grid grid-cols-8 my-3">
 				<section className="col-span-6 w-full grid grid-cols-3 gap-2 p-2 lg:p-5">
-					{products.map((product) => (
-						<ProductCard key={product._id} product={product} />
-					))}
+					{products.length ? (
+						products.map((product) => (
+							<ProductCard key={product._id} product={product} />
+						))
+					) : (
+							<img
+								src="/not-found.png"
+								alt="not found image"
+								className="col-span-full h-fit p-5"
+							/>
+					)}
 				</section>
 				<section className="col-span-2 w-full border rounded-xl p-5">
 					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
@@ -181,7 +189,11 @@ const Home = () => {
 
 						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
 							<input type="radio" name="priceRange" defaultValue="1to20" />
-							<i className="pl-2">1$ to 20</i>
+							<i className="pl-2">1$ to 20$</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="priceRange" defaultValue="20to200" />
+							<i className="pl-2">20$ to 200$</i>
 						</label>
 					</div>
 					<button
@@ -189,6 +201,18 @@ const Home = () => {
 						onClick={handleFiltering}
 					>
 						Apply
+					</button>
+					<button
+						className="btn btn-ghost btn-success border outline-dashed ml-5 mt-4"
+						onClick={() => {
+							setSearch("");
+							setSort("");
+							setBrand("");
+							setPriceRange("");
+							setCategory("");
+						}}
+					>
+						Clear Filter
 					</button>
 				</section>
 			</div>
