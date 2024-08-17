@@ -4,6 +4,7 @@ import React from "react";
 
 const ProductCard = ({ product }) => {
 	const { productName, productImage, price, creationDate, brand } = product;
+	const dateFormat = new Date(creationDate).toLocaleDateString();
 	return (
 		<>
 			<div class="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
@@ -24,9 +25,7 @@ const ProductCard = ({ product }) => {
 							<p class="text-lg font-semibold text-black cursor-auto my-3">
 								${price}
 							</p>
-							<del>
-								<p class="text-sm text-gray-600 cursor-auto ml-2"></p>
-							</del>
+							<p class="text-sm font-bold text-gray-600 cursor-auto ml-2">{dateFormat} created</p>
 							<div class="ml-auto">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"

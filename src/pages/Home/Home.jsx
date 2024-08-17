@@ -47,14 +47,14 @@ const Home = () => {
 	};
 
 	const handleFiltering = () => {
+		const selectedPriceRangeOption = document.querySelector(
+			'input[name="priceRange"]:checked',
+		);
 		const selectedBrandOption = document.querySelector(
 			'input[name="brand"]:checked',
 		);
 		const selectedCategoryOption = document.querySelector(
 			'input[name="category"]:checked',
-		);
-		const selectedPriceRangeOption = document.querySelector(
-			'input[name="priceRange"]:checked',
 		);
 		if (selectedBrandOption) {
 			setBrand(selectedBrandOption.value);
@@ -77,14 +77,14 @@ const Home = () => {
 
 	useEffect(() => {
 		fetchProductsData();
-	}, [search, sort, category, brand]);
+	}, [search, sort, category, brand, priceRange]);
 
 	// if (!products.length && !search) return <h1 className="text-9xl">Loading</h1>;
 	return (
 		<>
 			{/* search bar */}
 			<div className="flex flex-col md:flex-row gap-3 max-w-5xl mx-auto">
-				<form onSubmit={searchSubmit} className="flex md:w-3/4">
+				<form onSubmit={searchSubmit} className="flex mx-2 md:w-3/4">
 					<input
 						type="text"
 						name="search"
@@ -126,8 +126,13 @@ const Home = () => {
 					>
 						{showFiltering ? (
 							<img width="32" height="32" src="/filter.svg" alt="filter icon" />
-							) : (
-								<img width="32" height="32" src="/cross_filter.svg" alt="filter icon" />
+						) : (
+							<img
+								width="32"
+								height="32"
+								src="/cross_filter.svg"
+								alt="filter icon"
+							/>
 						)}
 					</button>
 				</div>
@@ -147,8 +152,10 @@ const Home = () => {
 					)}
 				</section>
 				<section
-					className={`border  rounded-xl p-5 ${
-						showFiltering ? "hidden" : "block absolute right-4 bg-red-400"
+					className={`border max-h-[140vh] rounded-xl p-5 ${
+						showFiltering
+							? "hidden"
+							: "block absolute lg:static right-4 bg-red-400"
 					} lg:block`}
 				>
 					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
@@ -185,6 +192,10 @@ const Home = () => {
 							<input type="radio" name="brand" defaultValue="chaldhal" />
 							<i className="pl-2">chaldhal</i>
 						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="brand" defaultValue="none" />
+							<i className="pl-2">None</i>
+						</label>
 					</div>
 					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
 						<h4 className="text-xl font-semibold">Category</h4>
@@ -200,17 +211,24 @@ const Home = () => {
 							<input type="radio" name="category" defaultValue="kitchen" />
 							<i className="pl-2">House Kitchen</i>
 						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="category" defaultValue="none" />
+							<i className="pl-2">None</i>
+						</label>
 					</div>
 					<div className="border rounded-md p-3 w-full mx-auto max-w-2xl">
 						<h4 className="text-xl font-semibold">Price Range</h4>
-
 						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
-							<input type="radio" name="priceRange" defaultValue="1to20" />
-							<i className="pl-2">1$ to 20$</i>
+							<input type="radio" name="priceRange" defaultValue="below200" />
+							<i className="pl-2">Below 200$</i>
 						</label>
 						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
-							<input type="radio" name="priceRange" defaultValue="20to200" />
-							<i className="pl-2">20$ to 200$</i>
+							<input type="radio" name="priceRange" defaultValue="20ToMax" />
+							<i className="pl-2">200$ to Max</i>
+						</label>
+						<label className="flex bg-gray-100 text-gray-700 rounded-md px-2 py-1 my-1  hover:bg-indigo-300 cursor-pointer ">
+							<input type="radio" name="priceRange" defaultValue="none" />
+							<i className="pl-2">None</i>
 						</label>
 					</div>
 					<button
