@@ -8,16 +8,16 @@ import toast from "react-hot-toast";
 const Home = () => {
 	const axios = useAxios();
 	const [products, setProducts] = useState([]);
+	const [size, setSize] = useState(10);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 	const [search, setSearch] = useState("");
 	const [sort, setSort] = useState("");
 	const [brand, setBrand] = useState("");
 	const [priceRange, setPriceRange] = useState("");
 	const [category, setCategory] = useState("");
 	const [showFiltering, setShowFiltering] = useState(true);
-	const [productQuantity, setProductQuantity] = useState(null);
-	const [size, setSize] = useState(10);
-	const [currentPage, setCurrentPage] = useState(1);
-
+	const [loading, setLoading] = useState(true);
 	// shortcut for query
 	// const [queryParams, setQueryParams] = useState({
 	// 	q: 'shoes',
@@ -68,27 +68,52 @@ const Home = () => {
 		if (selectedPriceRangeOption) {
 			setPriceRange(selectedPriceRangeOption.value);
 		}
+		setCurrentPage(1);
 	};
+	// const fetchProductsData = async () => {
+	// 	const { data } = await axios.get(
+	// 		`/products?search=${search}&sort=${sort}&category=${category}&brand=${brand}&pricerange=${priceRange}&size=${size}&currentPage=${currentPage}`,
+	// 	);
+	// 	setProducts(data);
+	// 	setLoading(false)
+	// };
+	// &size=${size}&currentPage=${currentPage}
+
 	const fetchProductsData = async () => {
-		const { data } = await axios.get(
-			`/products?search=${search}&sort=${sort}&category=${category}&brand=${brand}&pricerange=${priceRange}&size=${size}&currentPage=${currentPage}`,
-		);
-		setProducts(data);
+		try {
+			setLoading(true);
+			const { data } = await axios.get("/products", {
+				params: {
+					search,
+					sort,
+					category,
+					brand,
+					pricerange: priceRange,
+					size,
+					currentPage,
+				},
+			});
+			console.log(data, "data");
+			setProducts(data.products);
+			setTotalPages(data.totalPages) 
+			setLoading(false);
+		} catch (error) {
+			console.error("Error fetching products:", toast.error(error.message));
+			setLoading(false);
+		}
 	};
-	const fetchProductsQuantityNumber = async () => {
-		const { data } = await axios.get("/products-quantity");
-		setProductQuantity(data.quantity);
-	};
-	// pagination
-	const pageNum = Math.ceil(productQuantity / size);
-	const pages = [...Array(pageNum)].map((p, indx) => indx + 1);
+	const pages = [...Array(totalPages)].map((p, indx) => indx + 1);
 
 	useEffect(() => {
 		fetchProductsData();
-		fetchProductsQuantityNumber();
 	}, [search, sort, category, brand, priceRange, currentPage]);
 
-	// if (!products.length && !search) return <h1 className="text-9xl">Loading</h1>;
+	if (loading)
+		return (
+			<div className="min-h-screen w-full flex justify-center items-center">
+				<p className="loading loading-spinner loading-lg"></p>
+			</div>
+		);
 	return (
 		<>
 			{/* search bar */}
@@ -98,11 +123,11 @@ const Home = () => {
 						type="text"
 						name="search"
 						placeholder="Search for the tool you like"
-						className="w-full px-3 h-10 rounded-l border-2 border-sky-500 focus:outline-none focus:border-sky-500"
+						className="w-full px-3 h-10 rounded-l border-2 border-white/35 focus:outline-none focus:border-gray-500"
 					/>
 					<button
 						type="submit"
-						className="bg-sky-500 text-white rounded-r px-2 md:px-3 py-0 md:py-1"
+						className="bg-success text-white rounded-r px-2 md:px-3 py-0 md:py-1"
 					>
 						Search
 					</button>
@@ -112,7 +137,7 @@ const Home = () => {
 						onChange={(e) => {
 							setSort(e.target.value);
 						}}
-						className="h-10 max-w-fit border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
+						className="h-10 max-w-fit border-2 border-success focus:outline-none focus:border-success  rounded px-2 md:px-3 py-0 md:py-1 tracking-wider"
 					>
 						<option defaultValue="sorting" selected disabled hidden>
 							Sorting
